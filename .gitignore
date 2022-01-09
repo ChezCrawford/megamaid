@@ -1,0 +1,6 @@
+# project specific
+*.mp3
+*.xml
+
+# macOS
+.DS_Store
