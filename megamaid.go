@@ -11,9 +11,17 @@ func main() {
 }
 
 func downloadEpisode() {
-	url := "https://traffic.libsyn.com/secure/anjunadeep/The_Anjunadeep_Edition_380_with_Daniel_Curpen_FINAL_MIX.mp3"
-	name := "380 with Daniel Curpen.mp3"
-	DownloadFile(url, name)
+	itemIndex := 0
+	itemsToDownload := 1
+	feed, _ := LoadFeed("the-anjunadeep-edition.xml")
+
+	for itemIndex < itemsToDownload {
+		item, _ := feed.GetItemAtIndex(itemIndex)
+		name := item.GetFileName(feed)
+		url := item.Enclosure.Url
+		DownloadFile(url, name)
+		itemIndex++
+	}
 }
 
 func loadFeed() {

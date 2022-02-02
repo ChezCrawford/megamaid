@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"strings"
 )
 
 type Rss struct {
@@ -60,10 +62,26 @@ func toFeed(data []byte) (*Channel, error) {
 	return &c, nil
 }
 
+func (feed *Channel) GetItemAtIndex(index int) (*Item, error) {
+	if len(feed.Items) <= index {
+		return nil, errors.New("index out of bounds")
+	}
+
+	item := feed.Items[index]
+	return &item, nil
+}
+
 func (feed *Channel) PrintLatestItems() {
 	latestItems := feed.Items[0:5]
 	fmt.Println("Latest Items...")
-	for _, item := range latestItems {
-		fmt.Println(item)
+	for index, item := range latestItems {
+		fmt.Printf("%v - %v\n", index, item)
 	}
+}
+
+func (item *Item) GetFileName(channel *Channel) string {
+	name := strings.TrimPrefix(item.Title, channel.Title)
+	name = strings.TrimSpace(name) + ".mp3"
+	fmt.Println(name)
+	return name
 }
